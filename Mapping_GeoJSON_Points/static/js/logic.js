@@ -2,7 +2,7 @@
 console.log("working");
 
 // Create the map object wih a center and zoom level
-let map = L.map('mapid').setView([37.5, -122.5], 10);
+let map = L.map('mapid').setView([30, 30], 2);
 
 // Add GeoJSON data.
 let sanFranAirport =
@@ -34,14 +34,20 @@ let sanFranAirport =
 //     }
 // }).addTo(map);
 
-//Grabbing our GEOJSON data.
-L.geoJSON(sanFranAirport, {
-    onEachFeature: function(feature, layer) {
-        console.log(layer);
-        layer.bindPopup("<h2> Airport code: " + feature.properties.faa + "</h2> <hr> <h5> Airport name: " + feature.properties.name);
-    }
-}).addTo(map);
+// //Grabbing our GEOJSON data.
+// L.geoJSON(sanFranAirport, {
+//     onEachFeature: function(feature, layer) {
+//         console.log(layer);
+//         layer.bindPopup("<h2> Airport code: " + feature.properties.faa + "</h2> <hr> <h5> Airport name: " + feature.properties.name);
+//     }
+// }).addTo(map);
 
+//Grabbing our GEOJSON data.
+d3.json(airportData).then(function(data) {
+    console.log(data);
+    // Creating a GeoJSON layer with the retrieved data
+    l.geoJSON(data).addTo(map);
+});
 
 // We create the tile layer that will be the background of our map
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -49,5 +55,9 @@ let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/t
     maxZoom: 18,
     accessToken: API_KEY
 });
+
+// Accessing the airport GeoJSON URL
+let airportData = "https://raw.githubusercontent.com/<GitHub_name>/Mapping_Earthquakes/Mapping_GeoJSON_Points/majorAirports.json";
+
 // Then we add our 'graymap' tile layer to the map.
 streets.addTo(map);
