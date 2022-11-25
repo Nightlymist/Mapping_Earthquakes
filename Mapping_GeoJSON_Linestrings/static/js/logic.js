@@ -22,20 +22,33 @@ let baseMaps = {
 let map = L.map('mapid', {
     center: [44.0, -80.0],
     zoom: 2,
-    layers: [lights]
+    layers: [dark]
 })
 
 //Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
 // Accessing the Toronto airline routes GeoJSON URL.
-let torontoData = "https://raw.githubusercontent.com/Nightlymist/Mapping_Earthquakes/main/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
+let torontoData = "https://raw.githubusercontent.com/Nightlymist/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
+
+// Create a style for the lines.
+let myStyle = {
+    color: "yellow",
+    weight: 2
+}
 
 //Grabbing our GeoJSON data.
 d3.json(torontoData).then(function(data) {
     console.log(data);
+L.geoJSON(data, {
+    style: myStyle,
+    onEachFeature: function(feature, layer) {
+        layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr> <h3> Destination: "
+        + feature.properties.dst + "</h3>");
+    }
+})
     // Creating a GeoJSON layer with the retrieved data.
-    L.geoJSON(data).addTo(map);
+.addTo(map);
 });
 
 // Then we add our 'graymap' tile layer to the map.
